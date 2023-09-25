@@ -6,6 +6,10 @@
 parameters:
 
 services:
+    App\Service\MyEventService:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+    App\EventSubscriber\MyCustomEventSubscriber: ~
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
