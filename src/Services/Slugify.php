@@ -2,7 +2,7 @@
 namespace App\Services;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
-class Slugify2
+class Slugify
 {
     public function generateSlug ($texte): string {
         $slugger = new AsciiSlugger();

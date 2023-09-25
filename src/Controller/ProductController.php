@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Services\Slugify2;
+use App\Services\Slugify;
 
 class ProductController extends AbstractController
 {
@@ -20,7 +20,7 @@ class ProductController extends AbstractController
         ]);
     }
     #[Route('/product/slug', name: 'app_slug_product')]
-    public function slugProducts(Slugify2 $slugify): Response
+    public function slugProducts(Slugify $slugify): Response
     {
         $texte = $slugify->generateSlug('Ceci est une phrase en français');
         dd($texte);
