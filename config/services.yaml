@@ -6,6 +6,9 @@
 parameters:
 
 services:
+    App\DataFixtures\UserFixtures:
+        arguments:
+            $passwordEncoder: '@security.password_encoder'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
