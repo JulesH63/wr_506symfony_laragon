@@ -22,7 +22,7 @@ class MovieFixtures extends Fixture
             $manager->persist($category);
 
             // Création de films
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 20; $i++) {
                 $movie = new Movie();
                 $movie->setTitle("$categoryName Movie $i");
                 $movie->setDescription("La catégorie du film est : $categoryName Movie $i");
