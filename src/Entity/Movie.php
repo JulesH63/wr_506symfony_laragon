@@ -45,7 +45,7 @@ class Movie
     // private ?string $releaseDate = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $duration = null;
+    private ?string $runtime = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -107,14 +107,14 @@ class Movie
     //     return $this;
     // }
 
-    public function getDuration(): ?string
+    public function getruntime(): ?string
     {
-        return $this->duration;
+        return $this->runtime;
     }
 
-    public function setDuration(string $duration): static
+    public function setruntime(string $runtime): static
     {
-        $this->duration = $duration;
+        $this->runtime = $runtime;
 
         return $this;
     }
