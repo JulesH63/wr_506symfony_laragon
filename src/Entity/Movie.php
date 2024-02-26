@@ -41,8 +41,8 @@ class Movie
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $releaseDate = null;
+    // #[ORM\Column(length: 255)]
+    // private ?string $releaseDate = null;
 
     #[ORM\Column(length: 255)]
     private ?string $duration = null;
@@ -95,17 +95,17 @@ class Movie
         return $this;
     }
 
-    public function getReleaseDate(): ?string
-    {
-        return $this->releaseDate;
-    }
+    // public function getReleaseDate(): ?string
+    // {
+    //     return $this->releaseDate;
+    // }
 
-    public function setReleaseDate(string $releaseDate): static
-    {
-        $this->releaseDate = $releaseDate;
+    // public function setReleaseDate(string $releaseDate): static
+    // {
+    //     $this->releaseDate = $releaseDate;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getDuration(): ?string
     {

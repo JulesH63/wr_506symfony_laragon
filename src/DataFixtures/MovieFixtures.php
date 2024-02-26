@@ -1,37 +1,27 @@
 <?php
 
-// src/DataFixtures/MovieFixtures.php
 namespace App\DataFixtures;
 
-use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Category;
 use App\Entity\Movie;
+use Faker\Factory;
+use Xylis\FakerCinema\Provider\Movie as MovieProvider;
 
 class MovieFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        // Création de catégories
-        $categories = ['Action', 'Comédie', 'Science-fiction', 'Drame'];
+        $faker = Factory::create();
+        $faker->addProvider(new MovieProvider($faker));
 
-        foreach ($categories as $categoryName) {
-            $category = new Category();
-            $category->setName($categoryName);
-            $manager->persist($category);
+        // Générer 100 films
+        for ($i = 0; $i < 100; $i++) {
+            $movie = new Movie();
+            $movie->setTitle($faker->movie);
+            $movie->setRuntime($faker->runtime); // Utilisez la durée du film au lieu de la date de sortie
 
-            // Création de films
-            for ($i = 1; $i <= 20; $i++) {
-                $movie = new Movie();
-                $movie->setTitle("$categoryName Movie $i");
-                $movie->setDescription("La catégorie du film est : $categoryName Movie $i");
-                $movie->setReleaseDate('2022-09-30');
-                $movie->setDuration('2h');
-                $movie->setCategory($category);
-
-                $manager->persist($movie);
-            }
+            $manager->persist($movie);
         }
 
         $manager->flush();
