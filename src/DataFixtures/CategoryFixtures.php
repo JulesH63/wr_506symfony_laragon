@@ -9,20 +9,17 @@ use Faker\Factory;
 
 class CategoryFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
-        $categories = ['Action', 'Comédie', 'Science-fiction', 'Drame'];
-        foreach ($categories as $categoryName) {
+        // $product = new Product();
+        // $manager->persist($product);
+        foreach (range(1, 10) as $i) {
             $category = new Category();
-            $category->setName($categoryName);
+            $category->setName('Category' . $i);
             $manager->persist($category);
+            $this->addReference('category_' . $i, $category);
         }
-        for ($i = 0; $i < 10; $i++) {
-            $category = new Category();
-            $category->setName($faker->unique()->word());
-            $manager->persist($category);
-        }
+
 
         $manager->flush();
     }

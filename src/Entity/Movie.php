@@ -95,17 +95,17 @@ class Movie
         return $this;
     }
 
-    // public function getReleaseDate(): ?string
-    // {
-    //     return $this->releaseDate;
-    // }
+    public function getReleaseDate(): ?string
+    {
+        return $this->releaseDate;
+    }
 
-    // public function setReleaseDate(string $releaseDate): static
-    // {
-    //     $this->releaseDate = $releaseDate;
+    public function setReleaseDate(string $releaseDate): static
+    {
+        $this->releaseDate = $releaseDate;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getruntime(): ?string
     {

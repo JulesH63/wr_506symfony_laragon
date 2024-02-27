@@ -10,18 +10,29 @@ use Xylis\FakerCinema\Provider\Person as PersonProvider;
 
 class ActorFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
-        $faker->addProvider(new PersonProvider($faker));
+        $faker = Factory::create('fr_FR'); // Crée un générateur Faker pour le français
 
-        for ($i = 0; $i < 20; $i++) {
+        foreach (range(1, 10) as $i) {
             $actor = new Actor();
             $actor->setFirstName($faker->firstName);
             $actor->setLastName($faker->lastName);
+            
+            // Ajouter d'autres propriétés d'acteur si nécessaire, par exemple :
+            // $actor->setNationality($this->getReference('nationality_' . rand(1, 9)));
+
             $manager->persist($actor);
+            $this->addReference('actor_' . $i, $actor);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            // Si vous avez des dépendances pour ces fixations, vous pouvez les ajouter ici.
+        ];
     }
 }
