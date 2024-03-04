@@ -1,5 +1,5 @@
 api_platform:
-    title: Hello API Platform
+    title: Movie API
     version: 1.0.0
     graphql:
         enabled: true
@@ -10,3 +10,10 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
         extra_properties:
             standard_put: true
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header
+
+
