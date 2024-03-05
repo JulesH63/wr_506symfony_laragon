@@ -2,73 +2,82 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MovieRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ApiResource(
-    description: 'A movie with actors.',
+    normalizationContext: [
+        'groups' => ['movie:read']
+    ],
     operations: [
-        new Get(),
+        new Get(uriTemplate: '/movies/{id}'),
         new GetCollection(),
         new Post(),
         new Put(),
         new Patch(),
         new Delete(),
-    ]
+    ],
 )]
-        
+#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial'])]
+
 class Movie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['movie:read', 'category:read', 'actor:read'])]
+    
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['movie:read', 'actor:read', 'category:read'])]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 500)]
+    #[Groups(['movie:read'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 500, maxMessage: 'Describe your loot in 50 chars or less', minMessage: 'trop court')]
     private ?string $description = null;
 
-    // #[ORM\Column(length: 255)]
-    // private ?string $releaseDate = null;
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(['movie:read'])]
+    private ?DateTime $releaseDate = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $runtime = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['movie:read'])]
+    private ?int $duration = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'movies')]
+    #[Groups(['movie:read'])]
     private ?Category $category = null;
 
     #[ORM\ManyToMany(targetEntity: Actor::class, inversedBy: 'movies')]
-    private Collection $actor;
+    #[Groups(['movie:read'])]
+    private Collection $actors;
 
     public function __construct()
     {
-        $this->actor = new ArrayCollection();
+        $this->actors = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getTitle(): ?string
@@ -95,26 +104,26 @@ class Movie
         return $this;
     }
 
-    public function getReleaseDate(): ?string
+    public function getReleaseDate(): ?DateTime
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(string $releaseDate): static
+    public function setReleaseDate(DateTime $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
 
         return $this;
     }
 
-    public function getruntime(): ?string
+    public function getDuration(): ?string
     {
-        return $this->runtime;
+        return $this->duration;
     }
 
-    public function setruntime(string $runtime): static
+    public function setDuration(?string $duration): static
     {
-        $this->runtime = $runtime;
+        $this->duration = $duration;
 
         return $this;
     }
@@ -134,15 +143,15 @@ class Movie
     /**
      * @return Collection<int, Actor>
      */
-    public function getActor(): Collection
+    public function getActors(): Collection
     {
-        return $this->actor;
+        return $this->actors;
     }
 
     public function addActor(Actor $actor): static
     {
-        if (!$this->actor->contains($actor)) {
-            $this->actor->add($actor);
+        if (!$this->actors->contains($actor)) {
+            $this->actors->add($actor);
         }
 
         return $this;
@@ -150,9 +159,8 @@ class Movie
 
     public function removeActor(Actor $actor): static
     {
-        $this->actor->removeElement($actor);
+        $this->actors->removeElement($actor);
 
         return $this;
     }
-
 }

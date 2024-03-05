@@ -5,21 +5,22 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Category;
-use Faker\Factory;
 
 class CategoryFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        foreach (range(1, 10) as $i) {
-            $category = new Category();
-            $category->setName('Category' . $i);
+        $categories = [
+            'Action', 'Aventure', 'Comédie', 'Drame', 'Fantastique', 'Horreur', 'Policier', 'Science-fiction',
+            'Thriller', 'Western', 'Animation', 'Biopic', 'Documentaire', 'Guerre', 'Historique',
+        ];
+
+        foreach (range(1, 15) as $i) {
+            $category = (new Category())
+                ->setName($categories[$i - 1]);
             $manager->persist($category);
             $this->addReference('category_' . $i, $category);
         }
-
 
         $manager->flush();
     }

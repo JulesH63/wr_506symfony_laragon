@@ -21,7 +21,7 @@ class ActorFixtures extends Fixture implements DependentFixtureInterface
             $nationalities[] = $this->getReference('nationality_' . $i);
         }
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             $actor = new Actor();
             $actor->setFirstName($faker->firstName);
             $actor->setLastName($faker->lastName);
