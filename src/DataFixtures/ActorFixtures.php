@@ -2,25 +2,32 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Actor;
+use App\Entity\Nationality;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Actor;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
-use Xylis\FakerCinema\Provider\Person as PersonProvider;
 
-class ActorFixtures extends Fixture
+class ActorFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR'); // Crée un générateur Faker pour le français
+        $faker = Factory::create('fr_FR');
 
-        foreach (range(1, 10) as $i) {
+        // Obtient toutes les références de nationalité
+        $nationalities = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $nationalities[] = $this->getReference('nationality_' . $i);
+        }
+
+        for ($i = 1; $i <= 10; $i++) {
             $actor = new Actor();
             $actor->setFirstName($faker->firstName);
             $actor->setLastName($faker->lastName);
-            
-            // Ajouter d'autres propriétés d'acteur si nécessaire, par exemple :
-            // $actor->setNationality($this->getReference('nationality_' . rand(1, 9)));
+            // Attribue une nationalité aléatoire à chaque acteur
+            $randomIndex = array_rand($nationalities); // Choix aléatoire d'une nationalité parmi les références existantes
+            $actor->setNationality($nationalities[$randomIndex]);
 
             $manager->persist($actor);
             $this->addReference('actor_' . $i, $actor);
@@ -32,7 +39,7 @@ class ActorFixtures extends Fixture
     public function getDependencies()
     {
         return [
-            // Si vous avez des dépendances pour ces fixations, vous pouvez les ajouter ici.
+            NationalityFixtures::class,
         ];
     }
 }
